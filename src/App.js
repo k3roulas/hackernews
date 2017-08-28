@@ -26,6 +26,47 @@ function isSearched(searchTerm) {
   }
 }
 
+class Search extends Component {
+
+  render() {
+    const { value, onChange } = this.props;
+    return (
+    <form>
+      <input
+        onChange={onChange}
+        value={value}
+        ></input>
+    </form>
+    )
+  }
+
+}
+
+class Table extends Component {
+
+  render() {
+    const {list, searchTerm, onDismiss} = this.props;
+    return (
+      <div>
+      {
+        list.filter(isSearched(searchTerm)).map(item =>
+          <div key={item.objectID}>
+            <span><a href={item.url}>{item.title}</a></span>
+            <span>{item.author}</span>
+            <span>{item.num_comments}</span>
+            <span>{item.points}</span>
+            <button
+              onClick={() => onDismiss(item.objectID)}
+              >
+              dismiss
+            </button>
+          </div>
+      )}
+      </div>
+    )
+  }
+}
+
 class App extends Component {
 
   constructor(props) {
@@ -36,7 +77,7 @@ class App extends Component {
     }
 
     this.onDismiss = this.onDismiss.bind(this);
-    this.onSearch = this.onSearch.bind(this);
+    this.onChange = this.onChange.bind(this);
   }
 
   onDismiss(id) {
@@ -45,7 +86,7 @@ class App extends Component {
     this.setState({list: updatedList});
   }
 
-  onSearch(event) {
+  onChange(event) {
     this.setState({searchTerm: event.target.value});
   }
 
@@ -55,25 +96,16 @@ class App extends Component {
 
     return (
       <div className="App">
-        <form>
-          <input
-            onChange={this.onSearch}
-            value={searchTerm}
-            ></input>
-        </form>
-        {list.filter(isSearched(searchTerm)).map(item =>
-          <div key={item.objectID}>
-            <span><a href={item.url}>{item.title}</a></span>
-            <span>{item.author}</span>
-            <span>{item.num_comments}</span>
-            <span>{item.points}</span>
-            <button
-              onClick={() => this.onDismiss(item.objectID)}
-              >
-              dismiss
-            </button>
-            </div>
-        )}
+        <Search
+          value={searchTerm}
+          onChange={this.onChange}
+          />
+
+        <Table
+          list={list}
+          searchTerm={searchTerm}
+          onDismiss={this.onDismiss}
+          />
       </div>
     );
   }
