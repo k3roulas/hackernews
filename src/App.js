@@ -29,9 +29,10 @@ function isSearched(searchTerm) {
 class Search extends Component {
 
   render() {
-    const { value, onChange } = this.props;
+    const { value, onChange, children} = this.props;
     return (
     <form>
+      {children}
       <input
         onChange={onChange}
         value={value}
@@ -99,7 +100,9 @@ class App extends Component {
         <Search
           value={searchTerm}
           onChange={this.onChange}
-          />
+          >
+          Search
+        </Search>
 
         <Table
           list={list}
